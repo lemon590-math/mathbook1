@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IV. 놀이동산 속 수학 탐험 | 교사용 대시보드</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f5a623;
+            --background-color: #f4f7fc;
+            --text-color: #333;
+            --card-bg-color: #ffffff;
+            --border-color: #e0e6ed;
+            --header-height: 60px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: var(--card-bg-color);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+        
+        header p {
+            font-size: 1.1em;
+            color: #555;
+            margin-top: 5px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: var(--card-bg-color);
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        nav button {
+            background: none;
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 1em;
+            font-weight: 500;
+            color: #555;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            margin: 5px;
+        }
+
+        nav button.active, nav button:hover {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 2px 4px rgba(74, 144, 226, 0.4);
+        }
+
+        .content-section {
+            display: none;
+            background: var(--card-bg-color);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        h2 {
+            font-size: 2em;
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        h2 .emoji {
+            font-size: 1.2em;
+            margin-right: 15px;
+        }
+        
+        h3 {
+            font-size: 1.5em;
+            color: #333;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card {
+            background-color: #fdfdfd;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #eaf2fa;
+            font-weight: 500;
+        }
+
+        .interactive-tool {
+            border: 2px dashed var(--primary-color);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            background-color: #f0f6ff;
+        }
+        
+        .interactive-tool label {
+            font-weight: 500;
+            margin-right: 10px;
+        }
+
+        .interactive-tool input, .interactive-tool select, .interactive-tool button {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 1em;
+            margin: 5px 0;
+        }
+        
+        .interactive-tool button {
+            background-color: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .interactive-tool button:hover {
+            background-color: #d88c0a;
+        }
+        
+        .result {
+            margin-top: 15px;
+            font-weight: 700;
+            font-size: 1.2em;
+            color: var(--primary-color);
+        }
+
+        .collapsible {
+            background-color: #eaf2fa;
+            color: #444;
+            cursor: pointer;
+            padding: 15px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 1.2em;
+            font-weight: 500;
+            margin-top: 15px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .collapsible:hover {
+            background-color: #dce6f0;
+        }
+
+        .collapsible-content {
+            padding: 0 18px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background-color: #f9f9f9;
+            border-radius: 0 0 8px 8px;
+            border: 1px solid var(--border-color);
+            border-top: none;
+        }
+        
+        .collapsible-content div {
+            padding: 15px 0;
+        }
+        
+        .collapsible.active:after {
+            content: "\2212"; /* Minus sign */
+        }
+        
+        .collapsible:after {
+            content: '\002B'; /* Plus sign */
+            color: var(--primary-color);
+            font-weight: bold;
+            float: right;
+            margin-left: 5px;
+        }
+        
+        ul {
+            list-style-position: inside;
+            padding-left: 10px;
+        }
+        
+        li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>IV. 놀이동산 속 수학 탐험 🎢</h1>
+            <p>교사용 수업 지도 대시보드</p>
+        </header>
+
+        <nav id="nav-bar">
+            <button class="nav-btn active" data-target="lesson1">1. 놀이동산 둘러보기 🗺️</button>
+            <button class="nav-btn" data-target="lesson2">2. 바이킹의 비밀 📐</button>
+            <button class="nav-btn" data-target="lesson3">3. 롤러코스터의 비밀 ♾️</button>
+            <button class="nav-btn" data-target="lesson4">4. 대관람차 살펴보기 🎡</button>
+            <button class="nav-btn" data-target="resources">교수 자료 📚</button>
+        </nav>
+
+        <!-- Lesson 1: Touring the Amusement Park -->
+        <section id="lesson1" class="content-section active">
+            <h2><span class="emoji">🗺️</span>1. 놀이동산 둘러보기: 최적의 계획 세우기</h2>
+            <p>학생들이 주어진 시간 제약(160분) 내에서 놀이기구 대기 시간과 탑승 시간을 고려하여 가장 효율적인 탑승 계획을 세우도록 지도합니다. 이 과정에서 덧셈, 시간 계산, 조건부 의사결정 능력을 기를 수 있습니다.</p>
+
+            <h3>주요 조건</h3>
+            <div class="grid-container">
+                <div class="card">
+                    <h4>🕒 시간 제한</h4>
+                    <p>총 <strong>160분</strong> 동안 놀이동산을 이용할 수 있습니다.</p>
+                </div>
+                <div class="card">
+                    <h4>🎟️ 탑승 개수</h4>
+                    <p>총 <strong>5개</strong>의 놀이기구를 타야 합니다.</p>
+                </div>
+                <div class="card">
+                    <h4>⭐ 필수 포함</h4>
+                    <p>바이킹, 롤러코스터, 대관람차 중 <strong>2개 이상</strong> 반드시 포함해야 합니다.</p>
+                </div>
+            </div>
+
+            <h3>놀이기구 정보</h3>
+            <table id="ride-data-table">
+                <thead>
+                    <tr>
+                        <th>놀이기구</th>
+                        <th>대기 시간(분)</th>
+                        <th>탑승 시간(분)</th>
+                        <th>총 소요 시간(분)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>바이킹</td><td>60</td><td>5</td><td>65</td></tr>
+                    <tr><td>롤러코스터</td><td>90</td><td>2</td><td>92</td></tr>
+                    <tr><td>대관람차</td><td>15</td><td>20</td><td>35</td></tr>
+                    <tr><td>드롭 타워</td><td>40</td><td>2</td><td>42</td></tr>
+                    <tr><td>회전목마</td><td>20</td><td>5</td><td>25</td></tr>
+                    <tr><td>범퍼카</td><td>35</td><td>5</td><td>40</td></tr>
+                </tbody>
+            </table>
+            
+            <div class="interactive-tool">
+                <h3>🧮 탑승 계획 시뮬레이터</h3>
+                <p>5개의 놀이기구를 선택하여 총 소요 시간을 계산해 보세요.</p>
+                <div id="ride-selector-container"></div>
+                <button onclick="calculateTotalTime()">시간 계산하기</button>
+                <div id="calculator-result" class="result"></div>
+            </div>
+
+            <button class="collapsible">예시 답안 및 풀이</button>
+            <div class="collapsible-content">
+                <div>
+                    <h4>[예시 답안] 바이킹을 예약한 경우</h4>
+                    <p><strong>탑승 순서:</strong> 회전목마 → 대관람차 → 바이킹 → 범퍼카 → 드롭 타워</p>
+                    <p><strong>소요 시간 계산:</strong></p>
+                    <ul>
+                        <li>회전목마: 20(대기) + 5(탑승) = 25분</li>
+                        <li>대관람차: 15(대기) + 20(탑승) = 35분</li>
+                        <li>바이킹: 60(대기) + 5(탑승) = 65분 (회전목마와 대관람차를 타는 동안 60분의 대기시간 충족)</li>
+                        <li>범퍼카: 35(대기) + 5(탑승) = 40분</li>
+                        <li>드롭 타워: 40(대기) + 2(탑승) = 42분</li>
+                    </ul>
+                    <p><strong>총 소요 시간:</strong> 25 + 35 + (바이킹 탑승 5) + 40 + 42 = <strong>147분</strong></p>
+                    <p><em>* 위 계산은 교재의 풀이를 단순화한 것입니다. 바이킹 대기시간 60분은 다른 놀이기구를 타는 60분(25+35)으로 상쇄되는 개념을 설명할 수 있습니다.</em></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lesson 2: Viking Ship Secrets -->
+        <section id="lesson2" class="content-section">
+            <h2><span class="emoji">📐</span>2. 바이킹의 비밀 찾기: 각도와 높이의 관계</h2>
+            <p>바이킹 놀이기구의 움직임을 통해 원, 부채꼴, 반지름 등 기하학적 개념을 학습합니다. 특히 삼각비를 이용하여 특정 각도에서의 높이 변화를 계산함으로써 수학이 실제 현상에 어떻게 적용되는지 이해하도록 돕습니다.</p>
+
+            <h3>핵심 개념</h3>
+            <div class="grid-container">
+                <div class="card">
+                    <h4>원과 부채꼴</h4>
+                    <p>바이킹의 움직임은 원의 일부인 <strong>부채꼴</strong> 모양의 경로를 그립니다. 배의 길이는 원의 <strong>반지름</strong>에 해당합니다.</p>
+                </div>
+                <div class="card">
+                    <h4>높이의 차이</h4>
+                    <p>가장 무서운 양 끝자리는 가장 안쪽 자리보다 훨씬 높이 올라갑니다. 이 높이의 차이는 삼각비를 이용해 계산할 수 있습니다.</p>
+                </div>
+            </div>
+            
+            <div class="interactive-tool">
+                <h3>📏 바이킹 높이 계산기 (교재 모형 기준)</h3>
+                <p>바이킹 모형의 반지름은 <strong>6cm</strong>입니다. 중심축으로부터 수직선과 좌석이 이루는 각도에 따른 높이를 계산해 봅시다.</p>
+                <label for="viking-angle">각도 (0° ~ 75°):</label>
+                <input type="number" id="viking-angle" value="30" min="0" max="75">
+                <button onclick="calculateVikingHeight()">높이 계산</button>
+                <div id="viking-result" class="result"></div>
+                <p style="font-size:0.9em; margin-top:10px;"><em>* 교재에서는 가장 높을 때 수직축과 30°를 이룬다고 가정합니다. (최대 스윙 각도 150°의 양 끝은 75°). 높이는 (반지름) + (반지름) * cos(각도)로 계산됩니다.</em></p>
+            </div>
+            
+             <button class="collapsible">교재 풀이 과정</button>
+            <div class="collapsible-content">
+                <div>
+                    <h4>가장 중간 자리의 높이 차이</h4>
+                    <p>중간 자리가 가장 높이 올라갔을 때, 수직이 되므로 높이는 반지름과 같은 <strong>6cm</strong>가 됩니다.</p>
+                    <h4>오른쪽 맨 끝자리의 높이 차이</h4>
+                    <p>교재에서는 가장 높을 때, 바이킹이 수직 중심축과 30°의 각도를 이룬다고 가정합니다.
+                    <br>이때 지면으로부터의 총 높이는 <strong>(반지름) + AC</strong> 입니다.
+                    <br>AC의 길이는 삼각비를 이용하여 계산할 수 있습니다:
+                    <br>AC = AB × cos(30°) = 6 × (√3 / 2) ≈ 5.2cm
+                    <br>따라서 총 높이는 6cm + 5.2cm = <strong>약 11.2cm</strong>가 됩니다.
+                    </p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Lesson 3: Roller Coaster Secrets -->
+        <section id="lesson3" class="content-section">
+            <h2><span class="emoji">♾️</span>3. 롤러코스터의 비밀 찾기: 뫼비우스의 띠</h2>
+            <p>재활용 마크와 롤러코스터 레일의 공통점인 '뫼비우스의 띠'를 통해 위상수학의 기본 개념을 탐구합니다. 안과 밖의 구분이 없는 1개의 면과 1개의 모서리를 가진 뫼비우스 띠의 신비로운 성질을 직접 만들어보고 관찰하며 학습합니다.</p>
+            
+            <h3>뫼비우스의 띠 특징</h3>
+             <div class="grid-container">
+                <div class="card">
+                    <h4>① 면이 하나</h4>
+                    <p>안과 밖의 구분이 없습니다. 한쪽 면에서 선을 긋기 시작하면 출발점으로 돌아올 때 띠의 모든 면을 지나게 됩니다.</p>
+                </div>
+                <div class="card">
+                    <h4>② 경계가 하나</h4>
+                    <p>가장자리가 하나로 모두 연결되어 있습니다.</p>
+                </div>
+                 <div class="card">
+                    <h4>③ 자르면?</h4>
+                    <p>중심선을 따라 자르면 두 개로 분리되지 않고, 원래보다 두 배 길고 한 번 더 꼬인 하나의 띠가 됩니다.</p>
+                </div>
+            </div>
+
+            <h3>뫼비우스 띠의 활용</h3>
+            <p>뫼비우스의 띠는 양면을 모두 사용할 수 있어 효율적이라는 특징 때문에 다양한 곳에 활용됩니다.</p>
+            <ul>
+                <li><strong>컨베이어 벨트:</strong> 벨트의 모든 면을 마모시켜 수명을 2배로 늘릴 수 있습니다.</li>
+                <li><strong>롤러코스터 레일:</strong> 더 길고 역동적인 코스를 만드는 데 영감을 줍니다.</li>
+                <li><strong>에스컬레이터 손잡이:</strong> 모든 부분이 균일하게 사용되도록 설계된 경우가 있습니다.</li>
+                <li><strong>DNA 구조:</strong> 이중 나선 구조는 뫼비우스의 띠와 유사한 위상학적 특징을 가집니다.</li>
+            </ul>
+
+            <button class="collapsible">지도상 유의점</button>
+            <div class="collapsible-content">
+                <div>
+                    <h4>안전 교육</h4>
+                    <p>뫼비우스 띠를 만들고 자를 때, 가위나 칼 사용에 대한 안전 지도를 반드시 해야 합니다.</p>
+                    <h4>경제성과 공간 활용</h4>
+                    <p>롤러코스터 레일에 뫼비우스 띠 원리를 적용하면, 안과 밖 레일을 모두 활용하여 더 경제적이고 공간 효율적인 설계가 가능함을 설명할 수 있습니다.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Lesson 4: Ferris Wheel -->
+        <section id="lesson4" class="content-section">
+            <h2><span class="emoji">🎡</span>4. 대관람차 살펴보기: 주기적인 움직임</h2>
+            <p>대관람차의 일정한 회전 운동을 통해 높이 변화가 주기적으로 반복되는 현상을 그래프로 나타내고 분석합니다. 이를 통해 주기 함수의 기초 개념을 시각적으로 이해하고, 시간(x축)에 따른 높이(y축)의 관계를 파악하는 능력을 키웁니다.</p>
+
+            <h3>대관람차 정보</h3>
+             <div class="grid-container">
+                <div class="card">
+                    <h4>한 바퀴 회전 시간 (주기)</h4>
+                    <p><strong>20분</strong>이 걸립니다.</p>
+                </div>
+                <div class="card">
+                    <h4>반지름</h4>
+                    <p><strong>15m</strong>입니다.</p>
+                </div>
+                 <div class="card">
+                    <h4>최고 높이</h4>
+                    <p><strong>30m</strong> (지름)에 도달합니다. (탑승 높이 0m 가정)</p>
+                </div>
+            </div>
+
+            <h3>GeoGebra를 활용한 대관람차 시뮬레이션 📈</h3>
+            <p>교재에 제시된 지오지브라 자료입니다. 슬라이더를 움직여 시간에 따른 곤돌라의 위치와 높이 변화를 직접 확인해 보세요.</p>
+            <iframe
+                scrolling="no"
+                title="대관람차 시뮬레이션"
+                src="https://www.geogebra.org/m/qfawzmty"
+                width="100%"
+                height="600px"
+                style="border:1px solid #e0e0e0; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+            </iframe>
+        </section>
+        
+        <!-- Resources -->
+        <section id="resources" class="content-section">
+            <h2><span class="emoji">📚</span>교수 학습 자료</h2>
+            <p>수업에 활용할 수 있는 추가 자료 및 평가 기준입니다.</p>
+
+            <button class="collapsible">진로 탐색: 어트랙션 연구원</button>
+            <div class="collapsible-content">
+                <div>
+                    <h4>어떤 일을 하나요? 🧐</h4>
+                    <p>어트랙션 연구원은 단순한 놀이기구를 넘어, 스토리텔링, 테마 연출, 최첨단 기술을 접목하여 방문객에게 잊지 못할 경험을 선사하는 어트랙션을 기획, 설계, 개발하는 전문가입니다.</p>
+                    <h4>필요한 역량은? 🧠</h4>
+                    <ul>
+                        <li><strong>창의적 사고방식:</strong> 새로운 아이디어를 발굴하고 콘셉트를 구축하는 능력</li>
+                        <li><strong>기술 이해도:</strong> 기계, 전기, 전자, 가상현실(VR), 인공지능(AI) 등 다양한 기술에 대한 폭넓은 이해</li>
+                        <li><strong>협업 능력:</strong> 여러 팀(엔지니어, 디자이너 등)과 협력하여 프로젝트를 효율적으로 진행하는 능력</li>
+                    </ul>
+                    <p>미래 테마파크 산업의 핵심적인 역할을 수행하며, 창의력과 기술 이해도를 바탕으로 새로운 즐거움을 만들어내는 매력적인 직업입니다.</p>
+                </div>
+            </div>
+
+            <button class="collapsible">교사 관찰 평가 기준 (총체적 평가)</button>
+            <div class="collapsible-content">
+                <div>
+                    <table style="text-align:left;">
+                        <thead>
+                            <tr>
+                                <th>등급</th>
+                                <th>평가 기준</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>A (우수)</strong></td>
+                                <td>제한된 시간 내 효율적인 탑승 순서를 설계하고 자신만의 전략을 논리적으로 설명함. 놀이기구의 수학 원리를 적극적으로 탐구하고, AI 등을 활용하여 창의적인 놀이 공간을 기획하고 스토리보드를 완성도 높게 작성함.</td>
+                            </tr>
+                             <tr>
+                                <td><strong>B (보통)</strong></td>
+                                <td>탑승 순서와 시간을 설계하고 자신의 전략을 표현함. 놀이기구의 수학 원리를 탐구하고 관련 활동을 수행하며, AI를 활용하여 새로운 놀이 공간을 기획하고 스토리보드를 작성함.</td>
+                            </tr>
+                             <tr>
+                                <td><strong>C (노력 요함)</strong></td>
+                                <td>탑승 순서와 시간을 설계하려 시도함. 놀이기구의 수학 원리 발견 및 관련 활동 수행에 노력을 보이며, AI를 활용하여 새로운 놀이 공간 기획 및 스토리보드 작성을 시도함.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // Navigation logic
+        const navBar = document.getElementById('nav-bar');
+        const contentSections = document.querySelectorAll('.content-section');
+        const navButtons = document.querySelectorAll('.nav-btn');
+
+        navBar.addEventListener('click', (e) => {
+            const targetId = e.target.dataset.target;
+            if (!targetId) return;
+
+            navButtons.forEach(btn => btn.classList.remove('active'));
+            e.target.classList.add('active');
+            
+            contentSections.forEach(section => {
+                section.classList.remove('active');
+                if (section.id === targetId) {
+                    section.classList.add('active');
+                }
+            });
+        });
+
+        // Collapsible sections
+        const collapsibles = document.querySelectorAll(".collapsible");
+        collapsibles.forEach(item => {
+            item.addEventListener("click", function() {
+                this.classList.toggle("active");
+                const content = this.nextElementSibling;
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                }
+            });
+        });
+
+        // Lesson 1: Ride Calculator
+        const rideDataTable = document.getElementById('ride-data-table');
+        const rideData = Array.from(rideDataTable.querySelectorAll('tbody tr')).map(row => {
+            const cells = row.querySelectorAll('td');
+            return {
+                name: cells[0].textContent,
+                wait: parseInt(cells[1].textContent),
+                ride: parseInt(cells[2].textContent),
+                total: parseInt(cells[3].textContent)
+            };
+        });
+
+        const rideSelectorContainer = document.getElementById('ride-selector-container');
+        for (let i = 0; i < 5; i++) {
+            const select = document.createElement('select');
+            select.id = `ride-select-${i}`;
+            rideData.forEach((ride, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = ride.name;
+                select.appendChild(option);
+            });
+            rideSelectorContainer.appendChild(select);
+        }
+
+        function calculateTotalTime() {
+            let totalTime = 0;
+            const selectedRides = new Set();
+            const mustRides = ['바이킹', '롤러코스터', '대관람차'];
+            let mustRideCount = 0;
+
+            for (let i = 0; i < 5; i++) {
+                const select = document.getElementById(`ride-select-${i}`);
+                const rideIndex = parseInt(select.value);
+                const ride = rideData[rideIndex];
+                
+                if (selectedRides.has(ride.name)) {
+                     document.getElementById('calculator-result').innerHTML = `⚠️ 오류: 같은 놀이기구를 중복 선택할 수 없습니다.`;
+                     return;
+                }
+                selectedRides.add(ride.name);
+                totalTime += ride.total;
+                if (mustRides.includes(ride.name)) {
+                    mustRideCount++;
+                }
+            }
+
+            let resultHTML = `선택한 5개 놀이기구의 총 소요 시간은 <strong>${totalTime}분</strong> 입니다.`;
+            if (totalTime > 160) {
+                resultHTML += `<br><span style="color:red;">🔴 시간 초과! (160분 초과)</span>`;
+            } else {
+                resultHTML += `<br><span style="color:green;">🟢 시간 내 완료 가능!</span>`;
+            }
+            if (mustRideCount < 2) {
+                 resultHTML += `<br><span style="color:orange;">🟡 필수 놀이기구 조건을 만족하지 못했습니다 (2개 이상 필요).</span>`;
+            } else {
+                 resultHTML += `<br><span style="color:green;">🟢 필수 놀이기구 조건을 만족했습니다.</span>`;
+            }
+            
+            document.getElementById('calculator-result').innerHTML = resultHTML;
+        }
+
+        // Lesson 2: Viking Height Calculator
+        function calculateVikingHeight() {
+            const angleDeg = parseFloat(document.getElementById('viking-angle').value);
+            if (isNaN(angleDeg) || angleDeg < 0 || angleDeg > 75) {
+                document.getElementById('viking-result').textContent = '⚠️ 0에서 75 사이의 각도를 입력하세요.';
+                return;
+            }
+            const angleRad = angleDeg * (Math.PI / 180);
+            const radius = 6;
+            
+            // The book calculates height above the center-line.
+            const heightAboveCenter = radius * Math.cos(angleRad);
+            const totalHeightFromGround = radius + heightAboveCenter;
+            
+            document.getElementById('viking-result').innerHTML = `수직축과 ${angleDeg}°일 때,<br>중심축 위로의 높이(AC)는 약 <strong>${heightAboveCenter.toFixed(2)}cm</strong>,<br>가장 낮은 지점에서의 총 높이는 약 <strong>${totalHeightFromGround.toFixed(2)}cm</strong> 입니다.`;
+        }
+
+    </script>
+
+</body>
+</html>
